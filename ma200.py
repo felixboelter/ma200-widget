@@ -49,6 +49,11 @@ def compute(symbol: str, name: str) -> dict:
     flipped_today = signal != prev_signal
 
     last_close, last_sma, last_ema = close.iloc[-1], sma.iloc[-1], ema.iloc[-1]
+    dist = (last_close / last_sma - 1) * 100
+    exit_level = last_sma * (1 - BUFFER)
+    headroom = (last_close / exit_level - 1) * 100  # % the price can fall before OUT
+    de = lambda x, n=2: f"{x:,.{n}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    is_in = signal == "IN"
     return {
         "symbol": symbol,
         "name": name,
@@ -63,7 +68,18 @@ def compute(symbol: str, name: str) -> dict:
         "signal": signal,
         "signal_since": since.strftime("%Y-%m-%d"),
         "flipped_today": flipped_today,
-        "color": "#2E7D32" if signal == "IN" else "#C62828",
+        "color": "#2E7D32" if is_in else "#C62828",
+        # Pre-formatted fields for the widget
+        "close_fmt": f"{de(last_close)} €",
+        "sma_fmt": de(last_sma),
+        "dist_fmt": f"{'+' if dist >= 0 else '−'}{de(abs(dist), 1)} %",
+        "headroom_fmt": f"{de(headroom, 1)} %" if is_in else "–",
+        "bar_pct": int(max(0, min(100, headroom / 15 * 100))) if is_in else 0,
+        "arrow": "▲" if dist >= 0 else "▼",
+        "accent": "#4ADE80" if is_in else "#F87171",
+        "accent_dim": "#1A4ADE80" if is_in else "#1AF87171",
+        "bg": "#E6111827",
+        "muted": "#9CA3AF",
         "updated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M"),
     }
 
@@ -82,9 +98,9 @@ def main() -> None:
     for symbol, name in TICKERS.items():
         data = compute(symbol, name)
         slug = symbol.split(".")[0].lower()
-        (OUT_DIR / f"{slug}.json").write_text(json.dumps(data, indent=2))
+        (OUT_DIR / f"{slug}.json").write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
         notify(data)
-        print(json.dumps(data, indent=2))
+        print(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":
