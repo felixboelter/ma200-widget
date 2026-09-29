@@ -1,0 +1,17 @@
+{
+  "symbol": "H4ZJ.DE",
+  "name": "HSBC MSCI World",
+  "date": "2026-09-29",
+  "close": 43.526,
+  "sma200": 40.27,
+  "ema200": 40.595,
+  "dist_sma_pct": 8.08,
+  "dist_ema_pct": 7.22,
+  "exit_level": 39.465,
+  "buffer_pct": 2.0,
+  "signal": "IN",
+  "signal_since": "2025-05-12",
+  "flipped_today": false,
+  "color": "#2E7D32",
+  "updated_utc": "2026-09-29 20:54"
+}
