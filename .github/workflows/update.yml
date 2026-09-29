@@ -1,0 +1,30 @@
+name: Update 200MA signal
+
+on:
+  schedule:
+    - cron: "0 18 * * 1-5"   # weekdays, after Xetra close (18:00 UTC)
+  workflow_dispatch:          # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python ma200.py
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          MA_BUFFER: "0.02"
+      - name: Commit updated JSON
+        run: |
+          git config user.name  "ma200-bot"
+          git config user.email "ma200-bot@users.noreply.github.com"
+          git add docs/*.json
+          git diff --cached --quiet || git commit -m "Update 200MA $(date -u +%F)"
+          git push
