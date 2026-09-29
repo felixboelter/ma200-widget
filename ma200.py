@@ -100,7 +100,7 @@ def main() -> None:
         slug = symbol.split(".")[0].lower()
         (OUT_DIR / f"{slug}.json").write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
         notify(data)
-        print(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(json.dumps(data, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
