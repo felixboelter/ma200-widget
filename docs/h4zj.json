@@ -4,7 +4,7 @@
   "date": "2026-10-02",
   "close": 43.952,
   "sma200": 40.395,
-  "ema200": 40.715,
+  "ema200": 40.714,
   "dist_sma_pct": 8.81,
   "dist_ema_pct": 7.95,
   "exit_level": 39.587,
@@ -23,5 +23,5 @@
   "accent_dim": "#1A4ADE80",
   "bg": "#E6111827",
   "muted": "#9CA3AF",
-  "updated_utc": "2026-10-02 21:46"
+  "updated_utc": "2026-10-05 23:40"
 }
