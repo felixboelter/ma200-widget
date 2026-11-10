@@ -6,7 +6,7 @@
   "sma200": 41.049,
   "ema200": 41.354,
   "dist_sma_pct": 4.51,
-  "dist_ema_pct": 3.74,
+  "dist_ema_pct": 3.73,
   "exit_level": 40.228,
   "buffer_pct": 2.0,
   "signal": "IN",
@@ -23,5 +23,5 @@
   "accent_dim": "#1A4ADE80",
   "bg": "#E6111827",
   "muted": "#9CA3AF",
-  "updated_utc": "2026-11-06 22:40"
+  "updated_utc": "2026-11-10 01:08"
 }
