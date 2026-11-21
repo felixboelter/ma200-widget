@@ -26,8 +26,17 @@ NTFY_TOPIC = os.getenv("NTFY_TOPIC")  # set as a repo secret to enable pushes
 
 
 def compute(symbol: str, name: str) -> dict:
-    df = yf.Ticker(symbol).history(period="3y", auto_adjust=True)
-    close = df["Close"].dropna()
+    ticker = yf.Ticker(symbol)
+    df = ticker.history(period="3y", auto_adjust=True)
+    close = df["Close"]
+    # Yahoo often returns today's daily row with Close = NaN (volume present)
+    # until the next day. dropna() would silently drop it and the widget would
+    # lag one session behind. Fill it from the last intraday print instead.
+    if len(close) and close.iloc[-1] != close.iloc[-1]:
+        intraday = ticker.history(period="1d", interval="5m")["Close"].dropna()
+        if len(intraday) and intraday.index[-1].date() == close.index[-1].date():
+            close.iloc[-1] = float(intraday.iloc[-1])
+    close = close.dropna()
     if len(close) < WINDOW + 1:
         raise RuntimeError(f"{symbol}: only {len(close)} closes, need {WINDOW + 1}")
 
